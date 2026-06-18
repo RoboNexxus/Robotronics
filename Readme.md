@@ -14,7 +14,12 @@ SetUp () {
 ##
 
 ```tsx
-Const Req => () {
-<img width="552" height="165" alt="REQ" src="https://github.com/user-attachments/assets/05db7a88-cc83-4a44-bd44-61cc7533a280" />
-}
+const Req = () => ({
+  "Robo War Sr.":    { classes: "IX-XII", prizes: "9 Trophies" },
+  "Robo Soccer Sr.": { classes: "IX-XII", prizes: "9 Trophies" },
+  "Robo War Jr.":    { classes: "VI-VIII", prizes: "9 Trophies" },
+  "Robo Soccer Jr.": { classes: "VI-VIII", prizes: "9 Trophies" },
+  "Line Follower":   { classes: "IV-VI", prizes: "6 Trophies" },
+  "Robo Race":       { classes: "VI-VIII", prizes: "6 Trophies" },
+});
 ```
