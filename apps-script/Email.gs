@@ -1,9 +1,10 @@
-function sendRegistrationEmail(leaderName, recipientEmail, regId) {
+function sendRegistrationEmail(leaderName, recipientEmail, regId, eventName) {
 
   const template = HtmlService.createTemplateFromFile("RegistrationEmail");
 
   template.leader_name = leaderName;
   template.reg_id = regId;
+  template.event_name = eventName;
 
   const htmlBody = template.evaluate().getContent();
 
@@ -27,7 +28,7 @@ function sendRegistrationEmail(leaderName, recipientEmail, regId) {
     textContent:
 `Hello ${leaderName},
 
-Thank you for registering for Robotronics.
+Thank you for registering for ${eventName}.
 
 Registration ID
 
@@ -52,6 +53,7 @@ Run this command after joining the Discord server to verify your registration.
     muteHttpExceptions: true,
 
     headers: {
+      "accept": "application/json",
       "api-key": CONFIG.BREVO_API_KEY
     },
 
@@ -63,12 +65,14 @@ Run this command after joining the Discord server to verify your registration.
     options
   );
 
-  if (response.getResponseCode() >= 300) {
-    throw new Error(
-      "Brevo Error\n\n" +
-      response.getContentText()
-    );
+  const code = response.getResponseCode();
+  const body = response.getContentText();
+
+  if (code >= 200 && code < 300) {
+    Logger.log("Email sent successfully to " + recipientEmail);
+    return;
   }
 
-  Logger.log("Email sent to " + recipientEmail);
+  Logger.log("Brevo Error:");
+  Logger.log(body);
 }
