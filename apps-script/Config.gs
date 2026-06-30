@@ -1,7 +1,11 @@
 const CONFIG = {
-  NOTION_TOKEN:    "PUT_TOKEN_HERE",
-  NOTION_VERSION:  "2022-06-28",
-  NOTION_API_BASE: "https://api.notion.com/v1"
+  NOTION_TOKEN: PropertiesService.getScriptProperties().getProperty("NOTION_API"),
+  NOTION_API_BASE: "https://api.notion.com/v1",
+  NOTION_VERSION: "2022-06-28",
+
+  BREVO_API_KEY: PropertiesService.getScriptProperties().getProperty("BREVO_API_KEY"),
+  BREVO_SENDER_NAME: "Robo Nexus",
+  BREVO_SENDER_EMAIL: "robonexus.ais46@gmail.com"
 };
 
 const DATABASES = {
