@@ -1,13 +1,25 @@
 function onFormSubmit(e) {
   try {
-    const row        = getRowFromEvent(e);
+    const row = getRowFromEvent(e);
     validateRow(row);
 
-    const eventName  = row[HEADERS.EVENT].trim();
+    const eventName = row[HEADERS.EVENT].trim();
     const databaseId = getDatabaseId(eventName);
-    const regId      = generateRegistrationId(e);
+    const regId = generateRegistrationId(e);
 
     const notionPage = createNotionPage(databaseId, row, regId);
+
+    // Send confirmation email (does NOT stop registration if it fails)
+    try {
+      sendRegistrationEmail(
+        row[HEADERS.TEAM_LEADER],
+        row[HEADERS.EMAIL],
+        regId,
+        eventName
+      );
+    } catch (mailError) {
+      Logger.log("EMAIL ERROR: " + mailError.message);
+    }
 
     Logger.log(
       "Registration complete. Team: " +
@@ -17,6 +29,7 @@ function onFormSubmit(e) {
       " | Notion page ID: " +
       notionPage.id
     );
+
   } catch (error) {
     Logger.log("FATAL ERROR: " + error.message);
     throw error;
@@ -26,7 +39,8 @@ function onFormSubmit(e) {
 function generateRegistrationId(e) {
   const rowNumber = e.range.getRow();
 
-  // Row 1 = headers, Row 2 = first response
+  // Row 1 = header
+  // Row 2 = RN-001
   const registrationNumber = rowNumber - 1;
 
   return "RN-" + registrationNumber.toString().padStart(3, "0");
@@ -35,8 +49,7 @@ function generateRegistrationId(e) {
 function getRowFromEvent(e) {
   if (!e || !e.namedValues) {
     throw new Error(
-      "getRowFromEvent: e.namedValues is missing. " +
-      "Ensure this runs from an installable Form Submit trigger. Run installTrigger() first."
+      "getRowFromEvent: e.namedValues missing."
     );
   }
 
@@ -51,25 +64,21 @@ function getRowFromEvent(e) {
 }
 
 function installTrigger() {
+
   const HANDLER = "onFormSubmit";
 
   ScriptApp.getProjectTriggers().forEach(function(trigger) {
+
     if (trigger.getHandlerFunction() === HANDLER) {
       ScriptApp.deleteTrigger(trigger);
     }
+
   });
 
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-
   ScriptApp.newTrigger(HANDLER)
-    .forSpreadsheet(spreadsheet)
+    .forSpreadsheet(SpreadsheetApp.getActive())
     .onFormSubmit()
     .create();
 
-  Logger.log(
-    "Trigger installed for: " +
-    HANDLER +
-    " on spreadsheet: " +
-    spreadsheet.getName()
-  );
+  Logger.log("Trigger Installed");
 }
