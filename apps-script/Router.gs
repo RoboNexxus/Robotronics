@@ -1,19 +1,29 @@
-function getDatabaseId(eventName) {
+function normalizeEventName(eventName) {
   if (!eventName || typeof eventName !== "string") {
     throw new Error(
-      "getDatabaseId: eventName must be a non-empty string. " +
+      "normalizeEventName: eventName must be a non-empty string. " +
       "Received: " + JSON.stringify(eventName)
     );
   }
 
-  const normalised = eventName.trim();
+  return eventName
+    .trim()
+    // Remove everything after the first (
+    .replace(/\s*\(.*$/, "")
+    .trim();
+}
+
+function getDatabaseId(eventName) {
+  const normalised = normalizeEventName(eventName);
   const databaseId = DATABASES[normalised];
 
   if (!databaseId) {
     const validEvents = Object.keys(DATABASES).join(", ");
     throw new Error(
-      'getDatabaseId: Unknown event "' + normalised + '". ' +
-      "Valid event names are: " + validEvents
+      'getDatabaseId: Unknown event "' +
+      eventName +
+      '". Valid event names are: ' +
+      validEvents
     );
   }
 
@@ -21,8 +31,8 @@ function getDatabaseId(eventName) {
 }
 
 function supportsThirdMember(eventName) {
-  if (!eventName || typeof eventName !== "string") return false;
-  return EVENTS_WITH_MEMBER_3.indexOf(eventName.trim()) !== -1;
+  const normalised = normalizeEventName(eventName);
+  return EVENTS_WITH_MEMBER_3.includes(normalised);
 }
 
 function validateRow(row) {
@@ -38,7 +48,11 @@ function validateRow(row) {
 
   const missing = REQUIRED_FIELDS.filter(function(field) {
     const value = row[field];
-    return value === undefined || value === null || value.toString().trim() === "";
+    return (
+      value === undefined ||
+      value === null ||
+      value.toString().trim() === ""
+    );
   });
 
   if (missing.length > 0) {
