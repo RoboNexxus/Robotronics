@@ -56,7 +56,6 @@ function validateRow(row, e) {
 
   if (missing.length > 0) {
     const rawKeys = (e && e.namedValues) ? Object.keys(e.namedValues) : [];
-
     throw new Error(
       "validateRow: Missing required fields: " +
       missing.join(", ") +
@@ -72,7 +71,6 @@ function validateRow(row, e) {
   const rawTeamSize = row[HEADERS.TEAM_SIZE].toString().trim();
 
   let teamSize = 0;
-
   if (rawTeamSize.startsWith("1")) {
     teamSize = 1;
   } else if (rawTeamSize.startsWith("2")) {
@@ -91,7 +89,6 @@ function validateRow(row, e) {
   // Event validation
   // -----------------------------
   const event = normalizeEventName(row[HEADERS.EVENT]);
-
   const maxMembers = supportsThirdMember(event) ? 3 : 2;
 
   if (teamSize > maxMembers) {
@@ -124,14 +121,12 @@ function validateRow(row, e) {
     );
   }
 
-  // Prevent extra member for 1-member team
+  // Prevent extra member names when not allowed
   if (teamSize === 1 && (member2 || member3)) {
     throw new Error(
       "Do not enter additional member names for a 1-member team."
     );
   }
-
-  // Prevent Member 3 for 2-member team
   if (teamSize === 2 && member3) {
     throw new Error(
       "Member 3 should be left empty for a 2-member team."
