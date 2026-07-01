@@ -9,7 +9,7 @@ function onFormSubmit(e) {
 
     const notionPage = createNotionPage(databaseId, row, regId);
 
-    // Send confirmation email (does NOT stop registration if it fails)
+    // Send confirmation email
     try {
       sendRegistrationEmail(
         row[HEADERS.TEAM_LEADER],
@@ -20,6 +20,23 @@ function onFormSubmit(e) {
     } catch (mailError) {
       Logger.log("EMAIL ERROR: " + mailError.message);
     }
+
+  // Send Discord notification
+  try {
+    sendDiscordWebhook({
+      event: eventName,
+      regId: regId,
+      name: row[HEADERS.TEAM_LEADER],
+      teamName: row[HEADERS.TEAM_NAME],
+      teamType: row[HEADERS.TEAM_SIZE],
+      school: row[HEADERS.SCHOOL],
+      email: row[HEADERS.EMAIL],
+      phone: row[HEADERS.PHONE],
+      discord: ""
+    });
+  } catch (discordError) {
+    Logger.log("DISCORD ERROR: " + discordError.message);
+  }
 
     Logger.log(
       "Registration complete. Team: " +
@@ -48,9 +65,7 @@ function generateRegistrationId(e) {
 
 function getRowFromEvent(e) {
   if (!e || !e.namedValues) {
-    throw new Error(
-      "getRowFromEvent: e.namedValues missing."
-    );
+    throw new Error("getRowFromEvent: e.namedValues missing.");
   }
 
   const row = {};
@@ -64,15 +79,12 @@ function getRowFromEvent(e) {
 }
 
 function installTrigger() {
-
   const HANDLER = "onFormSubmit";
 
   ScriptApp.getProjectTriggers().forEach(function(trigger) {
-
     if (trigger.getHandlerFunction() === HANDLER) {
       ScriptApp.deleteTrigger(trigger);
     }
-
   });
 
   ScriptApp.newTrigger(HANDLER)
