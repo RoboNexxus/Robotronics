@@ -19,13 +19,6 @@ const DATABASES = {
   "Line Follower":   "fe308409-3690-41c5-b59f-77dc1f2fcdc0"
 };
 
-const EVENTS_WITH_MEMBER_3 = [
-  "Robo War Sr.",
-  "Robo War Jr.",
-  "Robo Soccer Sr.",
-  "Robo Soccer Jr."
-];
-
 const HEADERS = {
   TIMESTAMP:   "Timestamp",
   EVENT:       "Event",
