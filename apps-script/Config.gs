@@ -5,7 +5,9 @@ const CONFIG = {
 
   BREVO_API_KEY: PropertiesService.getScriptProperties().getProperty("BREVO_API_KEY"),
   BREVO_SENDER_NAME: "Robo Nexus",
-  BREVO_SENDER_EMAIL: "robonexus.ais46@gmail.com"
+  BREVO_SENDER_EMAIL: "robonexus.ais46@gmail.com",
+
+  DISCORD_WEBHOOK_URL: PropertiesService.getScriptProperties().getProperty("DISCORD_WEBHOOK_URL"),
 };
 
 const DATABASES = {
