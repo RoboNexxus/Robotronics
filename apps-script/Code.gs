@@ -1,7 +1,7 @@
 function onFormSubmit(e) {
   try {
     const row = getRowFromEvent(e);
-    validateRow(row);
+    validateRow(row, e);
 
     const eventName = row[HEADERS.EVENT].trim();
     const databaseId = getDatabaseId(eventName);
@@ -32,7 +32,7 @@ function onFormSubmit(e) {
       school: row[HEADERS.SCHOOL],
       email: row[HEADERS.EMAIL],
       phone: row[HEADERS.PHONE],
-      discord: ""
+      discord: row[HEADERS.DISCORD_ID]
     });
   } catch (discordError) {
     Logger.log("DISCORD ERROR: " + discordError.message);
@@ -72,7 +72,19 @@ function getRowFromEvent(e) {
   const namedValues = e.namedValues;
 
   for (const header in namedValues) {
-    row[header] = (namedValues[header][0] || "").toString();
+    // Trim the header key itself — Google Forms sections that reuse a
+    // question title (e.g. "Team Size" duplicated per event) can end up
+    // with an accidental trailing/leading space, producing a DIFFERENT
+    // column header than the one in Config.gs HEADERS. Trimming here
+    // makes the lookup resilient to that class of mismatch.
+    const cleanHeader = header.trim();
+    const value = (namedValues[header][0] || "").toString().trim();
+
+    // If two raw headers trim down to the same key, don't let a blank
+    // one stomp a populated one.
+    if (row[cleanHeader] === undefined || row[cleanHeader] === "") {
+      row[cleanHeader] = value;
+    }
   }
 
   return row;
