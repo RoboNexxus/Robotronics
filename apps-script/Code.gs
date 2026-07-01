@@ -15,28 +15,31 @@ function onFormSubmit(e) {
         row[HEADERS.TEAM_LEADER],
         row[HEADERS.EMAIL],
         regId,
-        eventName
+        eventName,
+        row[HEADERS.TEAM_NAME],
+        row[HEADERS.MEMBER_2],
+        row[HEADERS.MEMBER_3]
       );
-    } catch (mailError) {
-      Logger.log("EMAIL ERROR: " + mailError.message);
+    } catch (emailError) {
+      Logger.log("EMAIL ERROR: " + emailError.message);
     }
 
-  // Send Discord notification
-  try {
-    sendDiscordWebhook({
-      event: eventName,
-      regId: regId,
-      name: row[HEADERS.TEAM_LEADER],
-      teamName: row[HEADERS.TEAM_NAME],
-      teamType: row[HEADERS.TEAM_SIZE],
-      school: row[HEADERS.SCHOOL],
-      email: row[HEADERS.EMAIL],
-      phone: row[HEADERS.PHONE],
-      discord: row[HEADERS.DISCORD_ID]
-    });
-  } catch (discordError) {
-    Logger.log("DISCORD ERROR: " + discordError.message);
-  }
+    // Send Discord notification
+    try {
+      sendDiscordWebhook({
+        event: eventName,
+        regId: regId,
+        name: row[HEADERS.TEAM_LEADER],
+        teamName: row[HEADERS.TEAM_NAME],
+        teamType: row[HEADERS.TEAM_SIZE],
+        school: row[HEADERS.SCHOOL],
+        email: row[HEADERS.EMAIL],
+        phone: row[HEADERS.PHONE],
+        discord: row[HEADERS.DISCORD_ID]
+      });
+    } catch (discordError) {
+      Logger.log("DISCORD ERROR: " + discordError.message);
+    }
 
     Logger.log(
       "Registration complete. Team: " +
@@ -53,16 +56,6 @@ function onFormSubmit(e) {
   }
 }
 
-function generateRegistrationId(e) {
-  const rowNumber = e.range.getRow();
-
-  // Row 1 = header
-  // Row 2 = RN-001
-  const registrationNumber = rowNumber - 1;
-
-  return "RN-" + registrationNumber.toString().padStart(3, "0");
-}
-
 function getRowFromEvent(e) {
   if (!e || !e.namedValues) {
     throw new Error("getRowFromEvent: e.namedValues missing.");
@@ -71,23 +64,35 @@ function getRowFromEvent(e) {
   const row = {};
   const namedValues = e.namedValues;
 
+  // Build row object from namedValues (keys are trimmed to avoid stray spaces)
   for (const header in namedValues) {
-    // Trim the header key itself — Google Forms sections that reuse a
-    // question title (e.g. "Team Size" duplicated per event) can end up
-    // with an accidental trailing/leading space, producing a DIFFERENT
-    // column header than the one in Config.gs HEADERS. Trimming here
-    // makes the lookup resilient to that class of mismatch.
     const cleanHeader = header.trim();
     const value = (namedValues[header][0] || "").toString().trim();
-
-    // If two raw headers trim down to the same key, don't let a blank
-    // one stomp a populated one.
+    // Do not overwrite a populated value with an empty one
     if (row[cleanHeader] === undefined || row[cleanHeader] === "") {
       row[cleanHeader] = value;
     }
   }
 
+  // Merge duplicate form fields for Team Size and Member 2
+  if (row.hasOwnProperty(HEADERS.TEAM_SIZE + ".1")) {
+    // If the primary field is empty, use the secondary
+    row[HEADERS.TEAM_SIZE] = row[HEADERS.TEAM_SIZE] || row[HEADERS.TEAM_SIZE + ".1"];
+    delete row[HEADERS.TEAM_SIZE + ".1"];
+  }
+  if (row.hasOwnProperty(HEADERS.MEMBER_2 + ".1")) {
+    row[HEADERS.MEMBER_2] = row[HEADERS.MEMBER_2] || row[HEADERS.MEMBER_2 + ".1"];
+    delete row[HEADERS.MEMBER_2 + ".1"];
+  }
+
   return row;
+}
+
+function generateRegistrationId(e) {
+  const rowNumber = e.range.getRow();
+  // Row 1 = header, so registration number = rowNumber - 1
+  const registrationNumber = rowNumber - 1;
+  return "RN-" + registrationNumber.toString().padStart(3, "0");
 }
 
 function installTrigger() {
