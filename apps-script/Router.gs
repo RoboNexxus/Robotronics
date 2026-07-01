@@ -8,7 +8,6 @@ function normalizeEventName(eventName) {
 
   return eventName
     .trim()
-    // Remove everything after the first (
     .replace(/\s*\(.*$/, "")
     .trim();
 }
@@ -56,34 +55,86 @@ function validateRow(row, e) {
   });
 
   if (missing.length > 0) {
-    // Dump the raw column headers actually received from the form
-    // response. If a required field is "missing" but the user did
-    // answer it, the real header text almost always differs (extra
-    // space, different wording per section, etc.) from what's in
-    // Config.gs HEADERS — this log tells you exactly what it is.
     const rawKeys = (e && e.namedValues) ? Object.keys(e.namedValues) : [];
 
     throw new Error(
-      "validateRow: The following required fields are missing or empty: " +
+      "validateRow: Missing required fields: " +
       missing.join(", ") +
-      ". Raw form column headers received: [" + rawKeys.join(" | ") + "]"
+      ". Raw headers: [" +
+      rawKeys.join(" | ") +
+      "]"
     );
   }
 
-  // Cross-field check: if team size says 2+, Member 2 should actually
-  // be filled in (catches a separate class of "silently missing" bug).
-  const teamSize = parseInt(row[HEADERS.TEAM_SIZE], 10);
-  if (teamSize >= 2 && !(row[HEADERS.MEMBER_2] || "").trim()) {
+  // -----------------------------
+  // Normalize Team Size
+  // -----------------------------
+  const rawTeamSize = row[HEADERS.TEAM_SIZE].toString().trim();
+
+  let teamSize = 0;
+
+  if (rawTeamSize.startsWith("1")) {
+    teamSize = 1;
+  } else if (rawTeamSize.startsWith("2")) {
+    teamSize = 2;
+  } else if (rawTeamSize.startsWith("3")) {
+    teamSize = 3;
+  } else {
     throw new Error(
-      "validateRow: Team Size is " + row[HEADERS.TEAM_SIZE] +
-      " but Member 2 Full Name is empty."
+      'validateRow: Invalid Team Size "' +
+      rawTeamSize +
+      '".'
     );
   }
-  if (teamSize >= 3 && supportsThirdMember(row[HEADERS.EVENT]) &&
-      !(row[HEADERS.MEMBER_3] || "").trim()) {
+
+  // -----------------------------
+  // Event validation
+  // -----------------------------
+  const event = normalizeEventName(row[HEADERS.EVENT]);
+
+  const maxMembers = supportsThirdMember(event) ? 3 : 2;
+
+  if (teamSize > maxMembers) {
     throw new Error(
-      "validateRow: Team Size is " + row[HEADERS.TEAM_SIZE] +
-      " but Member 3 Full Name is empty."
+      '"' +
+      event +
+      '" allows a maximum of ' +
+      maxMembers +
+      " team members."
+    );
+  }
+
+  // -----------------------------
+  // Member validation
+  // -----------------------------
+  const member2 = (row[HEADERS.MEMBER_2] || "").trim();
+  const member3 = (row[HEADERS.MEMBER_3] || "").trim();
+
+  if (teamSize >= 2 && member2 === "") {
+    throw new Error(
+      "Member 2 Full Name is required for a " +
+      teamSize +
+      "-member team."
+    );
+  }
+
+  if (teamSize === 3 && member3 === "") {
+    throw new Error(
+      "Member 3 Full Name is required for a 3-member team."
+    );
+  }
+
+  // Prevent extra member for 1-member team
+  if (teamSize === 1 && (member2 || member3)) {
+    throw new Error(
+      "Do not enter additional member names for a 1-member team."
+    );
+  }
+
+  // Prevent Member 3 for 2-member team
+  if (teamSize === 2 && member3) {
+    throw new Error(
+      "Member 3 should be left empty for a 2-member team."
     );
   }
 }
