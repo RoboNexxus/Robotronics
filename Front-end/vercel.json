@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/register",
+      "destination": "/backend/api/register.js"
+    }
+  ]
+}
