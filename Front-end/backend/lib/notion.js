@@ -1,6 +1,29 @@
 const { Client } = require("@notionhq/client");
+const { DATABASES } = require("../config/databases");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
+// Paginates through one database and returns its row count
+async function countDatabase(databaseId) {
+  let total = 0;
+  let cursor = undefined;
+  do {
+    const res = await notion.databases.query({
+      database_id: databaseId,
+      start_cursor: cursor,
+      page_size: 100,
+    });
+    total += res.results.length;
+    cursor = res.has_more ? res.next_cursor : undefined;
+  } while (cursor);
+  return total;
+}
+
+// Total registrations across ALL event databases, used to derive the next sequential ID
+async function countTotalRegistrations() {
+  const counts = await Promise.all(Object.values(DATABASES).map(countDatabase));
+  return counts.reduce((sum, n) => sum + n, 0);
+}
 
 /**
  * Creates a registration row in the event's Notion database.
@@ -37,4 +60,4 @@ async function createRegistration(databaseId, data) {
   }
 }
 
-module.exports = { createRegistration };
+module.exports = { createRegistration, countTotalRegistrations };
