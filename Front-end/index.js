@@ -1,4 +1,7 @@
-const API_URL = "/api/register"; // same Vercel project as the frontend
+// Use localhost for local dev, relative path for Vercel deployment
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? "http://localhost:3001/api/register"
+  : "/api/register";
 
 function onEvent(){
   var max=+event.target.selectedOptions[0].dataset.max||3;
@@ -37,8 +40,14 @@ document.getElementById('form').addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+    
+    // Handle network errors
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({ error: `Server error: ${res.status}` }));
+      throw new Error(data.error || 'Registration failed');
+    }
+    
     var data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Registration failed');
 
     msg.style.color = '#22D3EE';
     msg.textContent = `Registered! Your ID: ${data.regId}. Check your email.`;
@@ -46,7 +55,9 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     onSize();
   } catch (err) {
     msg.style.color = '#f87171';
-    msg.textContent = err.message;
+    // Show more detailed error for debugging
+    msg.textContent = err.message || 'Failed to connect to server. Is the backend running?';
+    console.error('Registration error:', err);
   } finally {
     btn.disabled = false; btn.textContent = 'Continue';
   }
