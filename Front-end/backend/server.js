@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const { DATABASES, MAX_TEAM_SIZE } = require("./config/databases");
 const { generateRegId } = require("./lib/regId");
-const { createRegistration } = require("./lib/notion");
+const { createRegistration, countTotalRegistrations } = require("./lib/notion");
 const { buildRegistrationEmbed, sendWebhook } = require("./lib/discord");
 const { sendConfirmationEmail } = require("./lib/email");
 
@@ -30,7 +30,12 @@ app.post("/api/register", async (req, res) => {
     return res.status(400).json({ error: `Team size must be between 1 and ${MAX_TEAM_SIZE[eventName]}` });
   }
 
-  const regId = generateRegId();
+  // Count existing registrations across ALL event databases, then assign the next number.
+  // Note: two submissions arriving at the exact same instant could in theory get the
+  // same count before either page is created (no lock). Fine for expected volume;
+  // swap for a dedicated Notion "Counter" row if you need a hard guarantee.
+  const total = await countTotalRegistrations();
+  const regId = generateRegId(total);
   const data = { regId, eventName, teamName, leaderName, school, email, phone, discordId, teamSize: size, member2, member3 };
 
   // --- Notion ---
