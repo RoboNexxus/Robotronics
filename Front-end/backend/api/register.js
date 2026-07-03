@@ -1,6 +1,3 @@
-// Vercel serverless function — place at /api/register.js in your Vercel project root
-// (Vercel auto-routes any file in /api to /api/<filename>, no Express server needed)
-
 const { DATABASES, MAX_TEAM_SIZE } = require("../config/databases");
 const { generateRegId } = require("../lib/regId");
 const { createRegistration, countTotalRegistrations } = require("../lib/notion");
@@ -10,7 +7,6 @@ const { sendConfirmationEmail } = require("../lib/email");
 const TEAM_TYPE = { 1: "Solo", 2: "Duo", 3: "Trio" };
 
 module.exports = async (req, res) => {
-  // CORS (adjust origin to your actual frontend domain once deployed)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
