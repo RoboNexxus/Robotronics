@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/api/register"; // replace with deployed backend URL
+const API_URL = "/api/register"; // same Vercel project as the frontend
 
 function onEvent(){
   var max=+event.target.selectedOptions[0].dataset.max||3;
