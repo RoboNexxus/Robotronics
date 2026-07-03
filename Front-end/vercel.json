@@ -3,6 +3,10 @@
     {
       "source": "/api/register",
       "destination": "/backend/api/register.js"
+    },
+    {
+      "source": "/register",
+      "destination": "/register.html"
     }
   ]
 }
