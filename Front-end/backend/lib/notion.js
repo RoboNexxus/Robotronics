@@ -3,7 +3,6 @@ const { DATABASES } = require("../config/databases");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
-// Paginates through one database and returns its row count
 async function countDatabase(databaseId) {
   let total = 0;
   let cursor = undefined;
@@ -19,16 +18,11 @@ async function countDatabase(databaseId) {
   return total;
 }
 
-// Total registrations across ALL event databases, used to derive the next sequential ID
 async function countTotalRegistrations() {
   const counts = await Promise.all(Object.values(DATABASES).map(countDatabase));
   return counts.reduce((sum, n) => sum + n, 0);
 }
 
-/**
- * Creates a registration row in the event's Notion database.
- * Adjust the property names below to match your actual Notion schema.
- */
 async function createRegistration(databaseId, data) {
   const {
     regId, eventName, teamName, leaderName, school,
