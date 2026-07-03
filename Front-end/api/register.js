@@ -53,6 +53,9 @@ module.exports = async (req, res) => {
     res.status(200).json({ success: true, regId, notionSynced, emailSent });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ 
+      error: "Registration failed",
+      message: error.message 
+    });
   }
 };
