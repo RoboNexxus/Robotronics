@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const { DATABASES, MAX_TEAM_SIZE } = require("./config/databases");
 const { generateRegId } = require("./lib/regId");
@@ -11,6 +12,10 @@ const { sendConfirmationEmail } = require("./lib/email");
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the parent directory (Front-end folder)
+const path = require("path");
+app.use(express.static(path.join(__dirname, "..")));
 
 const TEAM_TYPE = { 1: "Solo", 2: "Duo", 3: "Trio" };
 
@@ -63,6 +68,11 @@ app.post("/api/register", async (req, res) => {
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
+});
+
+// Serve the registration page at root
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "register.html"));
 });
 
 const PORT = process.env.PORT || 3001;
