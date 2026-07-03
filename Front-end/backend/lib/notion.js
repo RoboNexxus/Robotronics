@@ -33,18 +33,16 @@ async function createRegistration(databaseId, data) {
     await notion.pages.create({
       parent: { database_id: databaseId },
       properties: {
-        "Team Name":       { title: [{ text: { content: teamName } }] },
-        "Registration ID": { rich_text: [{ text: { content: regId } }] },
-        "Event":           { rich_text: [{ text: { content: eventName } }] },
-        "Leader Name":     { rich_text: [{ text: { content: leaderName } }] },
-        "School":          { rich_text: [{ text: { content: school } }] },
-        "Email":           { email },
-        "Phone":           { phone_number: phone },
-        "Discord ID":      { rich_text: [{ text: { content: discordId || "N/A" } }] },
-        "Team Size":       { number: Number(teamSize) },
-        "Member 2":        { rich_text: [{ text: { content: member2 || "" } }] },
-        "Member 3":        { rich_text: [{ text: { content: member3 || "" } }] },
-        "Status":          { select: { name: "Registered" } },
+        "Name":          { title: [{ text: { content: leaderName } }] },
+        "Team Name":     { rich_text: [{ text: { content: teamName } }] },
+        "Reg ID":        { rich_text: [{ text: { content: regId } }] },
+        "School":        { rich_text: [{ text: { content: school } }] },
+        "Email":         { email },
+        "Phone":         { phone_number: phone },
+        "Discord ID":    { rich_text: [{ text: { content: discordId || "N/A" } }] },
+        "Team Size":     { number: Number(teamSize) },
+        "member_2":      { rich_text: [{ text: { content: member2 || "" } }] },
+        "member_3":      { rich_text: [{ text: { content: member3 || "" } }] },
       },
     });
     return true;
