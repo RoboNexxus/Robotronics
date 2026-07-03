@@ -4,12 +4,5 @@
       "source": "/register",
       "destination": "/register.html"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/register",
-      "dest": "/backend/api/register.js",
-      "methods": ["GET", "POST", "OPTIONS"]
-    }
   ]
 }
