@@ -1,9 +1,5 @@
 const ACCENT_COLOR = 0x5865f2;
 
-/**
- * Builds a clean, minimal embed for a new registration.
- * notionSynced / emailSent are booleans reflecting the outcome of those steps.
- */
 function buildRegistrationEmbed(data) {
   const {
     regId, eventName, teamName, teamType, leaderName,
