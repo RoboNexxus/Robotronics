@@ -1,4 +1,3 @@
-// Use localhost for local dev, relative path for Vercel deployment
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? "http://localhost:3001/api/register"
   : "/api/register";
@@ -41,7 +40,6 @@ document.getElementById('form').addEventListener('submit', async (e) => {
       body: JSON.stringify(payload),
     });
     
-    // Handle network errors
     if (!res.ok) {
       const data = await res.json().catch(() => ({ error: `Server error: ${res.status}` }));
       throw new Error(data.error || 'Registration failed');
@@ -55,7 +53,6 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     onSize();
   } catch (err) {
     msg.style.color = '#f87171';
-    // Show more detailed error for debugging
     msg.textContent = err.message || 'Failed to connect to server. Is the backend running?';
     console.error('Registration error:', err);
   } finally {
