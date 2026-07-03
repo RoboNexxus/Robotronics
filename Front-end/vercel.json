@@ -1,12 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/api/register",
-      "destination": "/backend/api/register.js"
-    },
-    {
       "source": "/register",
       "destination": "/register.html"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/register",
+      "dest": "/backend/api/register.js",
+      "methods": ["GET", "POST", "OPTIONS"]
     }
   ]
 }

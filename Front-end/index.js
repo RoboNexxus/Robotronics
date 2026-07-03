@@ -53,8 +53,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
     onSize();
   } catch (err) {
     msg.style.color = '#f87171';
-    msg.textContent = err.message || 'Failed to connect to server. Is the backend running?';
-    console.error('Registration error:', err);
+    msg.textContent = err.message || 'Failed to connect to server';
   } finally {
     btn.disabled = false; btn.textContent = 'Continue';
   }

@@ -7,17 +7,14 @@ const { sendConfirmationEmail } = require("../lib/email");
 const TEAM_TYPE = { 1: "Solo", 2: "Duo", 3: "Trio" };
 
 module.exports = async (req, res) => {
-  // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   
-  // Handle OPTIONS preflight request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
   
-  // Only allow POST method
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -57,9 +54,6 @@ module.exports = async (req, res) => {
     res.status(200).json({ success: true, regId, notionSynced, emailSent });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ 
-      error: "Internal server error. Please check server logs.",
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: "Internal server error" });
   }
 };

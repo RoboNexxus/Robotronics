@@ -13,8 +13,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "..")));
-
 const TEAM_TYPE = { 1: "Solo", 2: "Duo", 3: "Trio" };
 
 app.post("/api/register", async (req, res) => {
@@ -53,16 +51,15 @@ app.post("/api/register", async (req, res) => {
     res.json({ success: true, regId, notionSynced, emailSent });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ 
-      error: "Internal server error. Please check server logs.",
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-app.get("/", (req, res) => {
+app.get(["/", "/register", "/register.html"], (req, res) => {
   res.sendFile(path.join(__dirname, "..", "register.html"));
 });
+
+app.use(express.static(path.join(__dirname, "..")));
 
 const PORT = process.env.PORT || 3001;
 
@@ -70,13 +67,9 @@ const requiredEnvVars = ['NOTION_TOKEN', 'BREVO_API_KEY', 'BREVO_SENDER_EMAIL', 
 const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingEnvVars.length > 0) {
-  console.warn('\n⚠️  WARNING: Missing environment variables:', missingEnvVars.join(', '));
-  console.warn('⚠️  Please set them in your .env file. The server will start but features will fail.\n');
+  console.warn('WARNING: Missing environment variables:', missingEnvVars.join(', '));
 }
 
 app.listen(PORT, () => {
-  console.log(`✅ Registration API running on port ${PORT}`);
-  if (missingEnvVars.length === 0) {
-    console.log('✅ All environment variables configured');
-  }
+  console.log(`Server running on port ${PORT}`);
 });
