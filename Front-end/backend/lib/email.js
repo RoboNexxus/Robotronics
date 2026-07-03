@@ -3,7 +3,6 @@ const path = require("path");
 
 const TEMPLATE_PATH = path.join(__dirname, "..", "templates", "RegistrationEmail.html");
 
-// Replaces <?= var_name ?> tags with the matching value from `vars`
 function renderTemplate(vars) {
   const raw = fs.readFileSync(TEMPLATE_PATH, "utf8");
   return raw.replace(/<\?=\s*([\w]+)\s*\?>/g, (_, key) => (vars[key] ?? ""));
