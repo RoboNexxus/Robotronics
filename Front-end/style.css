@@ -1,60 +1,10 @@
-body {
-    background: #0a0a0a;
-    color: #fff;
-    font-family: "Pixelify Sans", sans-serif;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 60px 20px;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
-}
-h1 {
-    color: #22d3ee;
-    font-size: 48px;
-    margin-bottom: 40px;
-    letter-spacing: 1px;
-}
-label {
-    display: block;
-    font-weight: 700;
-    margin: 24px 0 8px;
-}
-input,
-select {
-    width: 100%;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    padding: 14px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-input:focus,
-select:focus {
-    outline: none;
-    border-color: #22d3ee;
-}
-.row {
-    display: flex;
-    gap: 20px;
-}
-.row > div {
-    flex: 1;
-}
-button {
-    margin-top: 30px;
-    background: #22d3ee;
-    color: #000;
-    border: none;
-    border-radius: 6px;
-    padding: 16px 40px;
-    font-weight: 700;
-    font-family: inherit;
-    font-size: 16px;
-    cursor: pointer;
-    float: right;
-}
+body{background:#0A0A0A;color:#fff;font-family:'Pixelify Sans',sans-serif;max-width:900px;margin:0 auto;padding:60px 20px;
+background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+background-size:20px 20px}
+h1{color:#22D3EE;font-size:48px;margin-bottom:40px;letter-spacing:1px}
+label{display:block;font-weight:700;margin:24px 0 8px}
+input,select{width:100%;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:14px;color:#fff;font-family:inherit;font-size:16px;box-sizing:border-box}
+input:focus,select:focus{outline:none;border-color:#22D3EE}
+.row{display:flex;gap:20px}
+.row>div{flex:1}
+button{margin-top:30px;background:#22D3EE;color:#000;border:none;border-radius:6px;padding:16px 40px;font-weight:700;font-family:inherit;font-size:16px;cursor:pointer;float:right}
