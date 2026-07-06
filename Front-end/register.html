@@ -8,13 +8,29 @@
 <link rel="icon" type="image/webp" href="/logo.webp">
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+  }
+}
+</script>
 </head>
 <body>
-<div style="text-align: center; margin-bottom: 20px;">
-<img src="/logo.webp" alt="RoboNexus Logo" style="max-width: 200px; height: auto;">
-</div>
-<h1>Register</h1>
-<form id="form">
+<div class="container">
+  <div style="text-align: center; margin-bottom: 20px;">
+    <img src="/logo.webp" alt="RoboNexus Logo" style="max-width: 200px; height: auto;">
+  </div>
+  
+  <h1>Register</h1>
+  
+  <!-- 3D Model Canvas -->
+  <div id="model-container">
+    <canvas id="model-canvas"></canvas>
+  </div>
+  
+  <form id="form">
 
 <label>Select Event *</label>
 <select id="event" required onchange="onEvent()">
@@ -58,6 +74,105 @@
 <p id="msg"></p>
 <button type="submit" id="submitBtn">Continue</button>
 </form>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// Scene setup
+const canvas = document.getElementById('model-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ 
+  canvas, 
+  alpha: true,
+  antialias: true 
+});
+
+const container = document.getElementById('model-container');
+const size = Math.min(container.clientWidth, 400);
+renderer.setSize(size, size);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+camera.position.z = 5;
+
+// Lighting setup
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const directionalLight1 = new THREE.DirectionalLight(0x22D3EE, 1);
+directionalLight1.position.set(5, 5, 5);
+scene.add(directionalLight1);
+
+const directionalLight2 = new THREE.DirectionalLight(0xff00ff, 0.5);
+directionalLight2.position.set(-5, -5, 5);
+scene.add(directionalLight2);
+
+const pointLight1 = new THREE.PointLight(0x22D3EE, 1, 100);
+pointLight1.position.set(0, 5, 5);
+scene.add(pointLight1);
+
+const pointLight2 = new THREE.PointLight(0xff00ff, 1, 100);
+pointLight2.position.set(0, -5, 5);
+scene.add(pointLight2);
+
+// Load model
+let model;
+const loader = new GLTFLoader();
+loader.load(
+  'https://res.cloudinary.com/drqqqhudz/image/upload/v1782364353/model2-optimized_vs55gn.glb',
+  (gltf) => {
+    model = gltf.scene;
+    
+    // Center and scale the model
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = 3 / maxDim;
+    
+    model.scale.setScalar(scale);
+    model.position.sub(center.multiplyScalar(scale));
+    
+    scene.add(model);
+  },
+  (xhr) => {
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+  },
+  (error) => {
+    console.error('Error loading model:', error);
+  }
+);
+
+// Animation
+function animate() {
+  requestAnimationFrame(animate);
+  
+  if (model) {
+    model.rotation.y += 0.005;
+  }
+  
+  // Animate lights in a circular pattern
+  const time = Date.now() * 0.001;
+  pointLight1.position.x = Math.cos(time) * 5;
+  pointLight1.position.z = Math.sin(time) * 5;
+  pointLight2.position.x = Math.cos(time + Math.PI) * 5;
+  pointLight2.position.z = Math.sin(time + Math.PI) * 5;
+  
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  const size = Math.min(container.clientWidth, 400);
+  renderer.setSize(size, size);
+  camera.aspect = 1;
+  camera.updateProjectionMatrix();
+});
+</script>
 <script src="index.js"></script>
 </body>
 </html>
