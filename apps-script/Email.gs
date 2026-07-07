@@ -36,7 +36,7 @@ ${regId}
 
 Join Discord
 
-https://discord.gg/HfzJZHJNxK
+https://discord.gg/PSnanAxagX
 
 Verify yourself
 
