@@ -5,15 +5,35 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
 document.addEventListener('DOMContentLoaded', () => {
   const logoModel = document.getElementById('logo3d');
   const logoLoader = document.getElementById('logoLoader');
+  const logoFallback = document.getElementById('logoFallback');
   if (!logoModel || !logoLoader) return;
 
+  const showFallback = () => {
+    logoModel.classList.remove('is-ready');
+    logoModel.classList.add('is-hidden');
+    if (logoFallback) {
+      logoFallback.classList.add('is-visible');
+    } else {
+      logoLoader.textContent = 'Logo preview unavailable';
+      logoLoader.style.display = 'flex';
+      return;
+    }
+    logoLoader.style.display = 'none';
+  };
+
+  const fallbackTimer = setTimeout(showFallback, 6000);
+
   logoModel.addEventListener('load', () => {
+    clearTimeout(fallbackTimer);
     logoModel.classList.add('is-ready');
+    logoModel.classList.remove('is-hidden');
+    if (logoFallback) logoFallback.classList.remove('is-visible');
     logoLoader.style.display = 'none';
   }, { once: true });
 
   logoModel.addEventListener('error', () => {
-    logoLoader.textContent = '3D logo failed to load';
+    clearTimeout(fallbackTimer);
+    showFallback();
   }, { once: true });
 });
 
