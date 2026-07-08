@@ -2,6 +2,21 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
   ? "http://localhost:3001/api/register"
   : "/api/register";
 
+document.addEventListener('DOMContentLoaded', () => {
+  const logoModel = document.getElementById('logo3d');
+  const logoLoader = document.getElementById('logoLoader');
+  if (!logoModel || !logoLoader) return;
+
+  logoModel.addEventListener('load', () => {
+    logoModel.classList.add('is-ready');
+    logoLoader.style.display = 'none';
+  }, { once: true });
+
+  logoModel.addEventListener('error', () => {
+    logoLoader.textContent = '3D logo failed to load';
+  }, { once: true });
+});
+
 function onEvent(){
   var max=+event.target.selectedOptions[0].dataset.max||3;
   var size=document.getElementById('size');
