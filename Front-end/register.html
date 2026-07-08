@@ -11,15 +11,11 @@
             rel="stylesheet"
         />
         <link href="style.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
     </head>
     <body>
-        <div style="text-align: center; margin-bottom: 20px">
-            <img
-                src="/logo.webp"
-                alt="RoboNexus Logo"
-                style="max-width: 200px; height: auto"
-            />
-        </div>
+        <div id="logo-container"></div>
         <h1>Register</h1>
         <form id="form">
             <label>Select Event *</label>
@@ -116,6 +112,7 @@
             <p id="msg"></p>
             <button type="submit" id="submitBtn">Continue</button>
         </form>
+        <script src="logo3d.js"></script>
         <script src="index.js"></script>
     </body>
 </html>
