@@ -6,13 +6,6 @@
         <title>Robotronics Registration</title>
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="icon" type="image/webp" href="/logo.webp" />
-        <link rel="preconnect" href="https://res.cloudinary.com" />
-        <link
-            rel="preload"
-            href="https://res.cloudinary.com/drqqqhudz/image/upload/v1783427413/logo-optimized_evx5on.glb"
-            as="fetch"
-            crossorigin="anonymous"
-        />
         <link
             href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
             rel="stylesheet"
@@ -20,30 +13,6 @@
         <link href="style.css" rel="stylesheet" />
     </head>
     <body>
-        <div id="logo-container" class="logo-3d-wrap">
-            <div class="logo-loader" id="logoLoader">Loading 3D logo...</div>
-            <model-viewer
-                id="logo3d"
-                src="https://res.cloudinary.com/drqqqhudz/image/upload/v1783427413/logo-optimized_evx5on.glb"
-                alt="RoboNexus 3D Logo"
-                auto-rotate
-                auto-rotate-delay="0"
-                rotation-per-second="25deg"
-                camera-controls
-                interaction-prompt="none"
-                loading="eager"
-            ></model-viewer>
-            <img
-                id="logoFallback"
-                class="logo-fallback"
-                src="/logo.webp"
-                alt="RoboNexus Logo"
-            />
-        </div>
-        <script
-            type="module"
-            src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
-        ></script>
         <h1>Register</h1>
         <form id="form">
             <label>Select Event *</label>
