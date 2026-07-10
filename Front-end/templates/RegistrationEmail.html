@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Registration Confirmed | Robotronics</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body { margin:0; padding:0; background:#000; font-family:"Space Grotesk",Arial,sans-serif; color:#fff; }
+            .wrapper { width:100%; background:#000; background-image: linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px); background-size:20px 20px; }
+            .container { max-width:600px; margin:0 auto; border-left:1px solid rgba(255,255,255,0.08); border-right:1px solid rgba(255,255,255,0.08); }
+            .topbar { padding:22px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.08); }
+            .brand { color:rgba(255,255,255,0.6); text-decoration:none; letter-spacing:4px; font-size:12px; font-weight:600; text-transform:uppercase; }
+            .logo { padding:42px 40px 20px; text-align:center; }
+            .logo img { width:170px; height:auto; }
+            .title { text-align:center; padding:0 40px; }
+            .title h1 { margin:0; font-size:34px; color:#fff; }
+            .subtitle { margin-top:10px; color:rgba(255,255,255,0.45); font-size:12px; letter-spacing:3px; text-transform:uppercase; }
+            .divider { height:1px; background:rgba(255,255,255,0.08); margin:36px 40px; }
+            .content { padding:0 40px; color:rgba(255,255,255,0.82); line-height:1.8; font-size:15px; }
+            .content h2 { color:#fff; margin:0 0 18px; font-size:20px; }
+            .card { margin:32px 0; border:1px solid rgba(255,255,255,0.1); background:#050505; text-align:center; padding:26px; }
+            .label { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,0.45); margin-bottom:14px; }
+            .regid { font-size:34px; letter-spacing:5px; color:#fff; font-weight:700; }
+            .button { display:inline-block; margin-top:24px; padding:14px 30px; background:#fff; color:#000!important; text-decoration:none; font-weight:600; border-radius:4px; }
+            .footer { margin-top:50px; border-top:1px solid rgba(255,255,255,0.08); padding:22px; text-align:center; color:rgba(255,255,255,0.3); font-size:11px; }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="container">
+                <div class="topbar">
+                    <a class="brand" href="https://robonexus46.vercel.app">ROBO NEXUS</a>
+                </div>
+                <div class="logo">
+                    <img src="https://raw.githubusercontent.com/RoboNexxus/Assets/62a843a24d1c86f7c3d3dc01d73d42c55ea35531/BG!.png" alt="Robo Nexus" />
+                </div>
+                <div class="title">
+                    <h1>Registration Confirmed</h1>
+                    <div class="subtitle">Robotronics</div>
+                </div>
+                <div class="divider"></div>
+                <div class="content">
+                    <h2>Hello <?= leader_name ?>,</h2>
+                    <p>Thank you for registering for <strong><?= event_name ?></strong></p>
+                    <div class="card">
+                        <div class="label">Registration ID</div>
+                        <div class="regid"><?= reg_id ?></div>
+                    </div>
+                    <p>Please keep this Registration ID safe. It will be required during the event.</p>
+                    <p style="margin-top:34px">
+                        <a class="button" href="https://discord.gg/PSnanAxagX">Join Discord</a>
+                    </p>
+                    <p style="margin-top:28px">Join our Discord server to stay updated with announcements, event details, and connect with other participants!</p>
+                    <p style="margin-top:40px">— Team Robo Nexus</p>
+                </div>
+                <div class="footer">Amity International School, Sector 46</div>
+            </div>
+        </div>
+    </body>
+</html>
