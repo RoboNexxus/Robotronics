@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AnimatedButton from "./animated-button";
 import dynamic from "next/dynamic";
 
 const Logo3D = dynamic(() => import("./Logo3D"), { ssr: false });
@@ -171,9 +172,13 @@ export default function RegisterPage() {
           {msg && <p className={`mt-4 text-base ${msg.ok ? "text-cyan-400" : "text-red-400"}`}>{msg.text}</p>}
 
           <div className="flex justify-end mt-7">
-            <button type="submit" disabled={loading} className="bg-cyan-400 text-black font-bold text-base px-10 py-4 rounded-md disabled:opacity-60 hover:bg-cyan-300 transition-colors">
+            <AnimatedButton
+              type="submit"
+              disabled={loading}
+              className="font-pixel text-base px-10 py-4 rounded-md"
+            >
               {loading ? "Submitting…" : "Continue"}
-            </button>
+            </AnimatedButton>
           </div>
         </form>
       </div>
