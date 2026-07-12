@@ -10,10 +10,9 @@ const pixelifySans = Pixelify_Sans({
 
 export const metadata: Metadata = {
   title: "Robo Nexus'26 Registration",
-  icons: [
-    { rel: "icon", type: "image/png", url: "/favicon.png" },
-    { rel: "icon", type: "image/webp", url: "/logo.webp" },
-  ],
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
